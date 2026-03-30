@@ -1,0 +1,132 @@
+[
+  {
+    "id": "f9b75834-aabd-4dc2-b5e9-588f3e83a03b",
+    "created_at": "2026-03-30T20:16:50Z",
+    "inputs": {
+      "topic": "Métodos numéricos",
+      "language": "es",
+      "level": "advanced",
+      "style": "narrative",
+      "duration_hint": "standard",
+      "orientation": "horizontal",
+      "template": "impact",
+      "target_audience": "Estudiantes avanzados de ingenieria",
+      "extra_notes": "Quiero que no se despliegue tanto texto en pantalla, solo breves frases"
+    },
+    "script": {
+      "title": "Métodos numéricos",
+      "introduccion": {
+        "text": "Ingenieros, ¿alguna vez se han enfrentado a un problema tan intrincado que las soluciones analíticas parecen un sueño lejano? Desde el diseño de aeronaves hasta la predicción climática, la realidad a menudo desafía la elegancia de las ecuaciones cerradas. Aquí es donde los métodos numéricos no solo son una herramienta, sino una filosofía indispensable, permitiéndonos explorar un universo de soluciones aproximadas donde la exactitud perfecta es inalcanzable, pero la precisión suficiente es todo lo que necesitamos para innovar. Abramos la puerta a este fascinante mundo.",
+        "duration": 15
+      },
+      "explicacion": {
+        "text": "Los métodos numéricos son el puente entre la teoría matemática y la complejidad del mundo real. No buscan una solución exacta, sino una aproximación suficientemente precisa, iterando sobre un problema hasta alcanzar un criterio de convergencia. \nSu fundamento radica en la discretización: transformar un problema continuo en una serie de pasos discretos computables. Esto implica manejar errores inherentes, como el error de truncamiento al aproximar series infinitas o el error de redondeo debido a la precisión finita de las máquinas. \nComprender la estabilidad de un método y su tasa de convergencia es crucial para garantizar que nuestra aproximación sea fiable y eficiente, especialmente en aplicaciones críticas como la simulación de estructuras o el análisis de fluidos.",
+        "duration": 25
+      },
+      "ejemplo": {
+        "text": "Consideremos la simulación de flujo de aire sobre el ala de un avión. Analíticamente, las ecuaciones de Navier-Stokes son intratables para geometrías complejas. Aquí, métodos como los de Elementos Finitos (FEM) o Diferencias Finitas (FDM) discretizan el dominio espacial en una malla. \nCada punto o elemento de esta malla se convierte en una incógnita, y el sistema de ecuaciones resultante, aunque enorme, puede resolverse numéricamente. La precisión de nuestra predicción de sustentación o arrastre dependerá directamente de la densidad de esta malla y del método iterativo empleado. Una malla más fina reduce el error de truncamiento, pero incrementa drásticamente el costo computacional. Se busca el equilibrio óptimo.",
+        "duration": 25,
+        "charts": [
+          {
+            "type": "bar",
+            "title": "Error Relativo en Simulación Aerodinámica vs. Resolución de Malla",
+            "data": [
+              {
+                "name": "Malla Gruesa (100k elems)",
+                "value": 5.8
+              },
+              {
+                "name": "Malla Media (500k elems)",
+                "value": 1.2
+              },
+              {
+                "name": "Malla Fina (2M elems)",
+                "value": 0.3
+              }
+            ]
+          }
+        ]
+      },
+      "conclusion": {
+        "text": "En resumen, los métodos numéricos son herramientas esenciales para resolver desafíos de ingeniería complejos. Nos enseñan sobre el compromiso constante entre la precisión requerida y el costo computacional tolerable. Son el fundamento invisible detrás de gran parte de la innovación moderna, desde el diseño de fármacos hasta la exploración espacial.",
+        "duration": 12
+      }
+    },
+    "audio_files": {
+      "title": "output/audio/title.mp3",
+      "introduccion": "output/audio/introduccion.mp3",
+      "explicacion": "output/audio/explicacion.mp3",
+      "ejemplo": "output/audio/ejemplo.mp3",
+      "conclusion": "output/audio/conclusion.mp3"
+    },
+    "video_path": "/home/javier/Documents/code/EduIA/outputs/Métodos_numéricos_1774901731.mp4",
+    "status": "completed"
+  },
+  {
+    "id": "f271066c-da99-4559-9f89-dc782b0c14be",
+    "created_at": "2026-03-30T20:12:23Z",
+    "inputs": {
+      "topic": "Métodos numéricos",
+      "language": "es",
+      "level": "basic",
+      "style": "explanatory",
+      "duration_hint": "short",
+      "orientation": "horizontal",
+      "template": "academic",
+      "target_audience": "Primer año de ingeniería",
+      "extra_notes": ""
+    },
+    "script": {
+      "title": "Métodos numéricos",
+      "introduccion": {
+        "text": "¿Alguna vez te has encontrado con un problema matemático que parece imposible de resolver exactamente? ¡No te preocupes! En ingeniería, muchos problemas no tienen una solución analítica perfecta. Aquí es donde entran los Métodos Numéricos, tu superpoder para encontrar soluciones aproximadas.",
+        "duration": 10
+      },
+      "explicacion": {
+        "text": "Los métodos numéricos son técnicas que nos permiten obtener soluciones aproximadas para problemas matemáticos difíciles o imposibles de resolver de forma exacta. \nEn lugar de buscar una fórmula directa, se basan en algoritmos y cálculos iterativos. Imagina que te acercas a la respuesta paso a paso, refinando tu estimación en cada iteración. \nSon herramientas esenciales en ingeniería para resolver ecuaciones complejas, calcular integrales o simular sistemas, permitiéndonos manejar la complejidad del mundo real.",
+        "duration": 22
+      },
+      "ejemplo": {
+        "text": "Un uso común es encontrar la raíz de una ecuación como x³ - x - 1 = 0, sin solución analítica fácil. \nUn método numérico nos permite aproximar la solución paso a paso. \nEste gráfico muestra cómo el error de nuestra estimación disminuye con cada iteración, acercándonos a la respuesta.",
+        "duration": 12,
+        "charts": [
+          {
+            "type": "bar",
+            "title": "Reducción del Error por Iteración (Método Numérico)",
+            "data": [
+              {
+                "name": "Iteración 1",
+                "value": 0.5
+              },
+              {
+                "name": "Iteración 2",
+                "value": 0.1
+              },
+              {
+                "name": "Iteración 3",
+                "value": 0.02
+              },
+              {
+                "name": "Iteración 4",
+                "value": 0.005
+              }
+            ]
+          }
+        ]
+      },
+      "conclusion": {
+        "text": "Los métodos numéricos: herramientas clave para problemas complejos. Ofrecen soluciones aproximadas en ingeniería y ciencia. Son indispensables para abordar la complejidad del mundo real.",
+        "duration": 8
+      }
+    },
+    "audio_files": {
+      "title": "output/audio/title.mp3",
+      "introduccion": "output/audio/introduccion.mp3",
+      "explicacion": "output/audio/explicacion.mp3",
+      "ejemplo": "output/audio/ejemplo.mp3",
+      "conclusion": "output/audio/conclusion.mp3"
+    },
+    "video_path": "/home/javier/Documents/code/EduIA/outputs/Métodos_numéricos_1774901485.mp4",
+    "status": "completed"
+  }
+]

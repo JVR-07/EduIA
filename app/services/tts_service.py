@@ -2,7 +2,7 @@ from gtts import gTTS
 import os
 
 # Carpeta donde se guardarán los audios
-OUTPUT_DIR = "app/output/audio"
+OUTPUT_DIR = "output/audio"
 
 
 def generar_audio(texto: str, nombre_archivo: str) -> str:

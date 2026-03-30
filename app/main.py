@@ -1,13 +1,26 @@
+import os
 from dotenv import load_dotenv
 
-load_dotenv()
+# Cargar .env desde el directorio padre
+load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
+
 from fastapi.staticfiles import StaticFiles
-
-
-
 from fastapi import FastAPI
-from app.routes import video
+from fastapi.middleware.cors import CORSMiddleware
+from routes import video
+
+import os
 
 app = FastAPI()
-app.mount("/audio", StaticFiles(directory="app/output/audio"), name="audio")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+os.makedirs("output/audio", exist_ok=True)
+app.mount("/audio", StaticFiles(directory="output/audio"), name="audio")
 app.include_router(video.router)        
