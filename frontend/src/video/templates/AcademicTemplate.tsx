@@ -44,7 +44,7 @@ interface ChartData {
 }
 
 export interface AcademicTemplateProps {
-  script: { title: string; sections: Record<string, ScriptSection> };
+  script: { title: string; sections?: Record<string, ScriptSection>; scenes?: any[] };
   audioPaths: Record<string, string>;
 }
 
@@ -237,7 +237,7 @@ function SplitScene({
               display: "flex",
               flexDirection: "column",
               gap: 20,
-              overflowHidden: "true",
+              overflow: "hidden",
             }}
           >
             {paragraphs.map((p, i) => {
@@ -442,14 +442,54 @@ export const AcademicTemplate: React.FC<AcademicTemplateProps> = ({
   audioPaths,
 }) => {
   const { fps } = useVideoConfig();
+  
+  if (script.scenes) {
+    let currentStart = 0;
+    return (
+      <AbsoluteFill>
+        {script.scenes.map((scene, i) => {
+          const durationFrames = Math.round((scene.duration || 10) * fps);
+          const start = Math.round(currentStart);
+          currentStart += durationFrames;
+          const audioSrc = audioPaths[scene.id || `scene_${i}`];
+          
+          let Node;
+          if (scene.type === "title" || scene.type === "quote" || scene.type === "outro") {
+             Node = <Intro title={scene.text || (scene.type === "outro" ? "Gracias por ver" : "...")} text={scene.type === "quote" ? (scene.author || "") : (scene.type === "outro" ? (scene.spoken_text || "") : (scene.spoken_text || ""))} durationInFrames={durationFrames} />;
+          } else if (scene.type === "concept" || scene.type === "question") {
+             Node = <SplitScene label={scene.type === "question" ? "Pregunta" : "Concepto"} text={scene.text || scene.spoken_text || ""} durationInFrames={durationFrames} />;
+          } else if (scene.type === "chart") {
+             const chartData = { type: scene.chart_type || "bar", title: scene.title || "Gráfica", data: scene.data || [] };
+             Node = <SplitScene label={scene.title || "Datos"} text={scene.text || scene.spoken_text || ""} rightContent={<ChartPanel chart={chartData as any} />} durationInFrames={durationFrames} />;
+          } else if (scene.type === "bullets") {
+             const pts = scene.items ? scene.items.join(". ") : (scene.text || "");
+             Node = <Conclusion text={pts} durationInFrames={durationFrames} />;
+          } else if (scene.type === "code") {
+             Node = <SplitScene label="Código Fuente" text={scene.spoken_text || ""} rightContent={<pre style={{ background: "#22c55e20", padding: "20px", borderRadius: "8px", color: "#f0fdf4", overflow: "hidden", fontSize: "16px" }}>{scene.code}</pre>} durationInFrames={durationFrames} />;
+          } else {
+             Node = <SplitScene label="Explicación" text={scene.text || scene.spoken_text || ""} durationInFrames={durationFrames} />;
+          }
+
+          return (
+            <Sequence key={scene.id || i} from={start} durationInFrames={durationFrames}>
+              {audioSrc && <Audio src={audioSrc} />}
+              {Node}
+            </Sequence>
+          );
+        })}
+      </AbsoluteFill>
+    );
+  }
+
+  // Fallback
   const s = script.sections as Record<string, ScriptSection>;
   const frames = {
-    i: (s.introduccion?.duration ?? 10) * fps,
-    e: (s.explicacion?.duration ?? 20) * fps,
-    x: (s.ejemplo?.duration ?? 20) * fps,
-    c: (s.conclusion?.duration ?? 8) * fps,
+    i: (s?.introduccion?.duration ?? 10) * fps,
+    e: (s?.explicacion?.duration ?? 20) * fps,
+    x: (s?.ejemplo?.duration ?? 20) * fps,
+    c: (s?.conclusion?.duration ?? 8) * fps,
   };
-  const chart = s.ejemplo?.charts?.[0];
+  const chart = s?.ejemplo?.charts?.[0];
 
   return (
     <AbsoluteFill>
@@ -457,7 +497,7 @@ export const AcademicTemplate: React.FC<AcademicTemplateProps> = ({
         {audioPaths.introduccion && <Audio src={audioPaths.introduccion} />}
         <Intro
           title={script.title}
-          text={s.introduccion?.text ?? ""}
+          text={s?.introduccion?.text ?? ""}
           durationInFrames={frames.i}
         />
       </Sequence>
@@ -465,7 +505,7 @@ export const AcademicTemplate: React.FC<AcademicTemplateProps> = ({
         {audioPaths.explicacion && <Audio src={audioPaths.explicacion} />}
         <SplitScene
           label="Explicación"
-          text={s.explicacion?.text ?? ""}
+          text={s?.explicacion?.text ?? ""}
           durationInFrames={frames.e}
         />
       </Sequence>
@@ -473,7 +513,7 @@ export const AcademicTemplate: React.FC<AcademicTemplateProps> = ({
         {audioPaths.ejemplo && <Audio src={audioPaths.ejemplo} />}
         <SplitScene
           label="Ejemplo"
-          text={s.ejemplo?.text ?? ""}
+          text={s?.ejemplo?.text ?? ""}
           rightContent={chart ? <ChartPanel chart={chart} /> : undefined}
           durationInFrames={frames.x}
         />
@@ -484,7 +524,7 @@ export const AcademicTemplate: React.FC<AcademicTemplateProps> = ({
       >
         {audioPaths.conclusion && <Audio src={audioPaths.conclusion} />}
         <Conclusion
-          text={s.conclusion?.text ?? ""}
+          text={s?.conclusion?.text ?? ""}
           durationInFrames={frames.c}
         />
       </Sequence>

@@ -12,7 +12,7 @@ interface ScriptSection { text: string; duration: number; charts?: ChartData[] }
 interface ChartData { type: "bar" | "line"; title: string; data: { name: string; value: number }[] }
 
 export interface ImpactTemplateProps {
-  script: { title: string; sections: Record<string, ScriptSection> }
+  script: { title: string; sections?: Record<string, ScriptSection>; scenes?: any[] }
   audioPaths: Record<string, string>
 }
 
@@ -194,26 +194,65 @@ function Conclusion({ text, durationInFrames }: { text: string; durationInFrames
 // ── Root ──────────────────────────────────────────────────
 export const ImpactTemplate: React.FC<ImpactTemplateProps> = ({ script, audioPaths }) => {
   const { fps } = useVideoConfig()
+
+  if (script.scenes) {
+    let currentStart = 0;
+    return (
+      <AbsoluteFill>
+        {script.scenes.map((scene, i) => {
+          const durationFrames = Math.round((scene.duration || 10) * fps);
+          const start = Math.round(currentStart);
+          currentStart += durationFrames;
+          const audioSrc = audioPaths[scene.id || `scene_${i}`];
+          
+          let Node;
+          if (scene.type === "title" || scene.type === "quote" || scene.type === "outro") {
+             Node = <Intro title={scene.text || (scene.type === "outro" ? "Gracias por ver" : "...")} text={scene.type === "quote" ? (scene.author || "") : (scene.type === "outro" ? (scene.spoken_text || "") : (scene.spoken_text || ""))} durationInFrames={durationFrames} />;
+          } else if (scene.type === "concept" || scene.type === "question") {
+             Node = <TextScene label={scene.type === "question" ? "Pregunta" : "Concepto"} text={scene.text || scene.spoken_text || ""} durationInFrames={durationFrames} />;
+          } else if (scene.type === "chart") {
+             const chartData = { type: scene.chart_type || "bar", title: scene.title || "Gráfica", data: scene.data || [] };
+             Node = <ExampleScene text={scene.text || scene.spoken_text || ""} charts={[chartData as any]} durationInFrames={durationFrames} />;
+          } else if (scene.type === "bullets") {
+             const pts = scene.items ? scene.items.join(". ") : (scene.text || "");
+             Node = <Conclusion text={pts} durationInFrames={durationFrames} />;
+          } else if (scene.type === "code") {
+             Node = <TextScene label="Código Fuente" text={`${scene.spoken_text || ""}\n\n${scene.code}`} durationInFrames={durationFrames} />;
+          } else {
+             Node = <TextScene label="Explicación" text={scene.text || scene.spoken_text || ""} durationInFrames={durationFrames} />;
+          }
+
+          return (
+            <Sequence key={scene.id || i} from={start} durationInFrames={durationFrames}>
+              {audioSrc && <Audio src={audioSrc} />}
+              {Node}
+            </Sequence>
+          );
+        })}
+      </AbsoluteFill>
+    );
+  }
+
   const s = script.sections as Record<string, ScriptSection>
-  const frames = { i: (s.introduccion?.duration ?? 10) * fps, e: (s.explicacion?.duration ?? 20) * fps, x: (s.ejemplo?.duration ?? 20) * fps, c: (s.conclusion?.duration ?? 8) * fps }
+  const frames = { i: (s?.introduccion?.duration ?? 10) * fps, e: (s?.explicacion?.duration ?? 20) * fps, x: (s?.ejemplo?.duration ?? 20) * fps, c: (s?.conclusion?.duration ?? 8) * fps }
 
   return (
     <AbsoluteFill>
       <Sequence from={0} durationInFrames={frames.i}>
         {audioPaths.introduccion && <Audio src={audioPaths.introduccion} />}
-        <Intro title={script.title} text={s.introduccion?.text ?? ""} durationInFrames={frames.i} />
+        <Intro title={script.title} text={s?.introduccion?.text ?? ""} durationInFrames={frames.i} />
       </Sequence>
       <Sequence from={frames.i} durationInFrames={frames.e}>
         {audioPaths.explicacion && <Audio src={audioPaths.explicacion} />}
-        <TextScene label="Explicación" text={s.explicacion?.text ?? ""} durationInFrames={frames.e} />
+        <TextScene label="Explicación" text={s?.explicacion?.text ?? ""} durationInFrames={frames.e} />
       </Sequence>
       <Sequence from={frames.i + frames.e} durationInFrames={frames.x}>
         {audioPaths.ejemplo && <Audio src={audioPaths.ejemplo} />}
-        <ExampleScene text={s.ejemplo?.text ?? ""} charts={s.ejemplo?.charts ?? []} durationInFrames={frames.x} />
+        <ExampleScene text={s?.ejemplo?.text ?? ""} charts={s?.ejemplo?.charts ?? []} durationInFrames={frames.x} />
       </Sequence>
       <Sequence from={frames.i + frames.e + frames.x} durationInFrames={frames.c}>
         {audioPaths.conclusion && <Audio src={audioPaths.conclusion} />}
-        <Conclusion text={s.conclusion?.text ?? ""} durationInFrames={frames.c} />
+        <Conclusion text={s?.conclusion?.text ?? ""} durationInFrames={frames.c} />
       </Sequence>
     </AbsoluteFill>
   )

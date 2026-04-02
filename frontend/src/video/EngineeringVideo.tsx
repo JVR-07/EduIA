@@ -17,22 +17,25 @@ export interface ChartData {
   data: { name: string; value: number }[];
 }
 
+export interface DynamicSceneData {
+  id: string;
+  type: "title" | "concept" | "bullets" | "chart" | "question" | "code" | "quote";
+  duration: number; // segundos
+  [key: string]: any;
+}
+
 export interface EngineeringVideoProps {
   script: {
     title: string;
-    sections: {
+    sections?: {
       introduccion: ScriptSection;
       explicacion: ScriptSection;
       ejemplo: ScriptSection;
       conclusion: ScriptSection;
     };
+    scenes?: DynamicSceneData[];
   };
-  audioPaths: {
-    introduccion: string;
-    explicacion: string;
-    ejemplo: string;
-    conclusion: string;
-  };
+  audioPaths: Record<string, string>;
 }
 
 export const EngineeringVideo: React.FC<EngineeringVideoProps> = ({

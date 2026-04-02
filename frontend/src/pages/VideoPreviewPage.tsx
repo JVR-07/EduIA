@@ -92,14 +92,46 @@ export function VideoPreviewPage() {
   // Calculate total duration from script
   const totalFrames = React.useMemo(() => {
     if (!entry?.script) return 600;
-    const s = entry.script as Record<string, { duration?: number }>;
-    const secs = [
-      "introduccion",
-      "explicacion",
-      "ejemplo",
-      "conclusion",
-    ].reduce((acc, k) => acc + (s[k]?.duration ?? 10), 0);
-    return secs * 30;
+    const script = entry.script as any;
+
+    if (script.scenes && Array.isArray(script.scenes)) {
+      const secs = script.scenes.reduce(
+        (acc: number, scene: any) => acc + (scene.duration ?? 10),
+        0
+      );
+      return Math.round(secs * 30);
+    }
+
+    const s = script as Record<string, { duration?: number }>;
+    const secs = ["introduccion", "explicacion", "ejemplo", "conclusion"].reduce(
+      (acc, k) => acc + (s[k]?.duration ?? 10),
+      0
+    );
+    return Math.round(secs * 30);
+  }, [entry]);
+
+  const audioPaths = React.useMemo(() => {
+    if (!entry?.audio_files) return {};
+    const apiBase = (import.meta as any).env.VITE_API_URL || "http://localhost:8000";
+    const paths: Record<string, string> = {};
+
+    Object.entries(entry.audio_files).forEach(([key, path]) => {
+      // Extract filename from path (could be win or linux style)
+      const filename = path.split(/[/\\]/).pop();
+      paths[key] = `${apiBase}/audio/${filename}`;
+    });
+
+    return paths;
+  }, [entry]);
+
+  const scriptProps = React.useMemo(() => {
+    if (!entry) return { title: "Video", sections: {}, scenes: [] };
+    const script = entry.script as any;
+    return {
+      title: entry.inputs.topic,
+      scenes: script.scenes,
+      sections: script.introduccion ? script : undefined,
+    };
   }, [entry]);
 
   return (
@@ -193,15 +225,10 @@ export function VideoPreviewPage() {
                 style={{ maxWidth: isVertical ? 360 : 800 }}
               >
                 <Player
-                  component={VideoComposition}
+                  component={VideoComposition as any}
                   inputProps={{
-                    script: {
-                      title: entry.inputs.topic,
-                      sections: entry.script as Parameters<
-                        typeof VideoComposition
-                      >[0]["script"]["sections"],
-                    },
-                    audioPaths: entry.audio_files ?? {},
+                    script: scriptProps,
+                    audioPaths: audioPaths,
                     templateId: entry.inputs.template,
                     orientation: entry.inputs.orientation,
                   }}

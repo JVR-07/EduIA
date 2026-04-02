@@ -18,10 +18,18 @@ interface ScriptSection {
   }[];
 }
 
+export interface DynamicSceneData {
+  id: string;
+  type: "title" | "concept" | "bullets" | "chart" | "question" | "code" | "quote";
+  duration: number;
+  [key: string]: any;
+}
+
 export interface VideoCompositionProps {
   script: {
     title: string;
-    sections: Record<string, ScriptSection>;
+    sections?: Record<string, ScriptSection>;
+    scenes?: DynamicSceneData[];
   };
   audioPaths: Record<string, string>;
   templateId?: "minimalist" | "academic" | "impact";
