@@ -1,5 +1,135 @@
 [
   {
+    "id": "c282a24d-2b9b-44ce-a997-4e7063e3f7f4",
+    "created_at": "2026-04-02T18:41:47Z",
+    "inputs": {
+      "topic": "POO",
+      "language": "es",
+      "level": "intermediate",
+      "style": "explanatory",
+      "duration_hint": "standard",
+      "orientation": "horizontal",
+      "template": "academic",
+      "target_audience": "Primer año de ingeniería",
+      "extra_notes": ""
+    },
+    "script": {
+      "title": "POO",
+      "introduccion": {
+        "text": "¿Alguna vez te has preguntado cómo los sistemas de software complejos se mantienen organizados y fáciles de mantener? La respuesta, ingenieros, es a menudo la Programación Orientada a Objetos, o POO. Hoy desglosaremos este paradigma fundamental que transformará su manera de diseñar y construir software robusto.",
+        "duration": 15
+      },
+      "explicacion": {
+        "text": "La Programación Orientada a Objetos es un paradigma de programación que organiza el diseño del software alrededor de objetos, en lugar de funciones y lógica. Estos objetos son instancias de clases, que son como plantillas.\nSus cuatro pilares fundamentales son:\n1.  **Encapsulación**: Oculta los detalles internos de un objeto, exponiendo solo lo necesario para interactuar con él. Piensen en una caja negra.\n2.  **Herencia**: Permite que una clase (subclase) herede propiedades y comportamientos de otra (superclase), promoviendo la reutilización de código.\n3.  **Polimorfismo**: Significa \"muchas formas\". Un objeto puede tomar diferentes formas dependiendo del contexto, lo que permite un código más flexible y genérico.\n4.  **Abstracción**: Se enfoca en la idea esencial de un objeto, ocultando los detalles de implementación complejos para simplificar su uso.",
+        "duration": 40
+      },
+      "ejemplo": {
+        "text": "Imaginemos un sistema de gestión de vehículos. Podríamos tener una clase base 'Vehiculo' con propiedades como 'marca' y 'modelo' y un método 'arrancar()'.\nLuego, podríamos tener subclases como 'Coche' y 'Motocicleta' que heredan estas características. El 'Coche' podría añadir un método 'encenderLuces()' y la 'Motocicleta' un 'inclinarEnCurva()'.\nEl polimorfismo se vería al llamar a 'arrancar()' en ambos; cada uno implementaría su arranque de forma específica. Esto no solo organiza el código, sino que también facilita la adición de nuevos tipos de vehículos sin reescribir todo el sistema.",
+        "duration": 35,
+        "charts": [
+          {
+            "type": "bar",
+            "title": "Impacto de POO en Métricas de Calidad de Código",
+            "data": [
+              {
+                "name": "Reusabilidad de Código",
+                "value": 85
+              },
+              {
+                "name": "Mantenibilidad",
+                "value": 70
+              },
+              {
+                "name": "Escalabilidad",
+                "value": 78
+              },
+              {
+                "name": "Legibilidad",
+                "value": 65
+              }
+            ]
+          }
+        ]
+      },
+      "conclusion": {
+        "text": "En resumen, la POO nos ofrece herramientas poderosas para diseñar sistemas de software modulares y robustos. Sus pilares —encapsulación, herencia, polimorfismo y abstracción— son claves para gestionar la complejidad. Dominar la POO es esencial para cualquier ingeniero que aspire a construir software de calidad en el mundo real.",
+        "duration": 15
+      }
+    },
+    "audio_files": {
+      "title": "output/audio/title.mp3",
+      "introduccion": "output/audio/introduccion.mp3",
+      "explicacion": "output/audio/explicacion.mp3",
+      "ejemplo": "output/audio/ejemplo.mp3",
+      "conclusion": "output/audio/conclusion.mp3"
+    },
+    "video_path": "/home/javier/Documents/code/EduIA/outputs/POO_1775155199.mp4",
+    "status": "completed"
+  },
+  {
+    "id": "e3d5539a-1842-47b3-b510-f8cdc7571e78",
+    "created_at": "2026-04-02T18:18:20Z",
+    "inputs": {
+      "topic": "Entradas y salidas de sistemas industriales",
+      "language": "es",
+      "level": "intermediate",
+      "style": "explanatory",
+      "duration_hint": "long",
+      "orientation": "horizontal",
+      "template": "impact",
+      "target_audience": "Estudiantes principiantes",
+      "extra_notes": "Tema de colas, linea de produccion, formular, etc."
+    },
+    "script": {
+      "title": "Entradas y salidas de sistemas industriales",
+      "introduccion": {
+        "text": "¡Hola a todos! ¿Alguna vez se han preguntado cómo funcionan esas enormes fábricas o sistemas complejos? Todo se reduce a algo fundamental: las entradas y las salidas. En este video, desglosaremos qué son, por qué son cruciales y cómo la gestión eficiente de estas influye en el éxito de cualquier sistema industrial. ¡Comencemos!",
+        "duration": 18
+      },
+      "explicacion": {
+        "text": "Un sistema industrial puede ser una fábrica, una planta de energía o incluso una cadena de suministro. Sus 'entradas' son todo lo que necesita para operar: desde materias primas como metal o plástico, hasta energía eléctrica, información de pedidos o el trabajo de los operarios.\nEstas entradas pasan por un proceso de transformación dentro del sistema. Por otro lado, las 'salidas' son el resultado de ese proceso. Pueden ser productos terminados, como coches o alimentos, pero también subproductos como residuos, datos de producción o incluso calor generado.\nUn aspecto clave en la gestión de entradas y salidas es el manejo de las 'colas'. Pensemos en una línea de producción: si las materias primas llegan muy rápido o muy lento, se forman colas que pueden detener la producción o causar desperdicio. Entender y optimizar estas colas es vital para la eficiencia.",
+        "duration": 40
+      },
+      "ejemplo": {
+        "text": "Imaginemos una línea de ensamblaje de teléfonos móviles.\n**Entradas:** Placas base, pantallas, baterías, carcasas, pegamento, herramientas, energía eléctrica, software de prueba y, por supuesto, trabajadores calificados.\n**Proceso:** Los componentes se ensamblan, se sueldan, se instalan los sistemas operativos y se realizan pruebas de calidad.\n**Salidas:** Teléfonos móviles funcionales, teléfonos defectuosos (desechos) y datos de rendimiento de la producción.\nSi la llegada de pantallas se retrasa, la estación de ensamblaje se quedará sin trabajo, creando una cola de espera para los trabajadores y deteniendo el flujo. Si llegan demasiadas, se acumulan, ocupando espacio y aumentando el riesgo de daños. Una buena gestión de entradas y colas asegura un flujo constante y optimiza la salida de productos.",
+        "duration": 45,
+        "charts": [
+          {
+            "type": "bar",
+            "title": "Rendimiento Horario de Ensamblaje de Teléfonos",
+            "data": [
+              {
+                "name": "Sin Gestión de Colas",
+                "value": 85
+              },
+              {
+                "name": "Con Gestión Básica de Colas",
+                "value": 105
+              },
+              {
+                "name": "Con Gestión Optimizada de Colas",
+                "value": 120
+              }
+            ]
+          }
+        ]
+      },
+      "conclusion": {
+        "text": "En resumen, las entradas y salidas son el corazón de cualquier sistema industrial. Su correcta identificación y gestión, incluyendo el control de las colas, es fundamental. Permite maximizar la eficiencia, reducir costos y asegurar la calidad del producto final.",
+        "duration": 15
+      }
+    },
+    "audio_files": {
+      "title": "output/audio/title.mp3",
+      "introduccion": "output/audio/introduccion.mp3",
+      "explicacion": "output/audio/explicacion.mp3",
+      "ejemplo": "output/audio/ejemplo.mp3",
+      "conclusion": "output/audio/conclusion.mp3"
+    },
+    "video_path": "/home/javier/Documents/code/EduIA/outputs/Entradas_y_salidas_de_sistemas_1775153778.mp4",
+    "status": "completed"
+  },
+  {
     "id": "f9b75834-aabd-4dc2-b5e9-588f3e83a03b",
     "created_at": "2026-03-30T20:16:50Z",
     "inputs": {

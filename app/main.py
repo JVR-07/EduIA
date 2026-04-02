@@ -21,6 +21,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-os.makedirs("output/audio", exist_ok=True)
-app.mount("/audio", StaticFiles(directory="output/audio"), name="audio")
+audio_dir = os.getenv("AUDIO_OUTPUT_DIR", "outputs/audio")
+os.makedirs(audio_dir, exist_ok=True)
+app.mount("/audio", StaticFiles(directory=audio_dir), name="audio")
 app.include_router(video.router)        

@@ -4,7 +4,8 @@ import json
 from models.schemas import VideoRequest, Language, Level, VideoStyle, DurationHint
 
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-model = genai.GenerativeModel("gemini-2.5-flash")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
+model = genai.GenerativeModel(GEMINI_MODEL)
 
 
 def _get_language_label(lang: Language) -> str:

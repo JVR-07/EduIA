@@ -16,10 +16,10 @@ from typing import Optional
 
 logger = logging.getLogger(__name__)
 
-REMOTION_SERVER_URL = os.getenv("REMOTION_SERVER_URL", "http://localhost:3001")
+REMOTION_SERVER_URL = os.getenv("REMOTION_SERVER_URL")
 OUTPUT_DIR = Path(os.getenv("VIDEO_OUTPUT_DIR", "outputs/videos"))
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-BACKEND_URL = os.getenv("BACKEND_URL", "http://127.0.0.1:8000")
+BACKEND_URL = os.getenv("BACKEND_URL")
 
 class VideoService:
     def __init__(self, server_url: str = REMOTION_SERVER_URL):
@@ -32,6 +32,8 @@ class VideoService:
         self,
         script: dict,
         audio_paths: dict,
+        template_id: str = "academic",
+        orientation: str = "horizontal",
         output_name: Optional[str] = None,
     ) -> str:
         """
@@ -39,23 +41,10 @@ class VideoService:
 
         Args:
             script: dict con la estructura del guión de Gemini.
-                    Se espera:
-                    {
-                        "title": str,
-                        "introduccion": {"text": str, "duration": int},
-                        "explicacion":  {"text": str, "duration": int},
-                        "ejemplo":      {"text": str, "duration": int,
-                                         "charts": [...] (opcional)},
-                        "conclusion":   {"text": str, "duration": int},
-                    }
-            audio_paths: dict con rutas absolutas a los MP3:
-                    {
-                        "introduccion": "/path/to/intro.mp3",
-                        "explicacion":  "/path/to/explicacion.mp3",
-                        "ejemplo":      "/path/to/ejemplo.mp3",
-                        "conclusion":   "/path/to/conclusion.mp3",
-                    }
-            output_name: nombre del archivo MP4 de salida (opcional).
+            audio_paths: dict con rutas absolutas a los MP3.
+            template_id: ID de la plantilla a usar.
+            orientation: horizontal o vertical.
+            output_name: nombre del archivo MP4 de salida.
 
         Returns:
             Ruta absoluta al video MP4 generado.
@@ -69,9 +58,9 @@ class VideoService:
         self._check_server_health()
 
         # Construir payload para Remotion
-        payload = self._build_payload(script, audio_paths, output_name)
+        payload = self._build_payload(script, audio_paths, template_id, orientation, output_name)
 
-        logger.info(f"Enviando request de render a Remotion: {output_name}")
+        logger.info(f"Enviando request de render a Remotion: {output_name} (template={template_id}, orientation={orientation})")
         start = time.time()
 
         response = requests.post(
@@ -105,7 +94,7 @@ class VideoService:
                 "Asegúrate de correr: npm run server (en el directorio remotion/)"
             )
 
-    def _build_payload(self, script: dict, audio_paths: dict, output_name: str) -> dict:
+    def _build_payload(self, script: dict, audio_paths: dict, template_id: str, orientation: str, output_name: str) -> dict:
          # Convertir rutas locales a URLs HTTP
         http_audio_paths = {}
         for key, path in audio_paths.items():
@@ -142,12 +131,12 @@ class VideoService:
 
             sections[key] = data
 
-       
-
         return {
             "title": script.get("title", script.get("tema", "Sin título")),
             "sections": sections,
-            "audioPaths": http_audio_paths,  # ← rutas absolutas
+            "audioPaths": http_audio_paths,
+            "templateId": template_id,
+            "orientation": orientation,
             "outputName": output_name,
         }
 
@@ -155,9 +144,6 @@ class VideoService:
         """
         Si el JSON de Gemini incluye datos numéricos en el ejemplo,
         los extrae como configuración de gráfica para Recharts.
-
-        Si Gemini no incluye datos explícitos, devuelve lista vacía
-        (el ExampleScene mostrará solo el texto).
         """
         charts = []
 
@@ -177,5 +163,5 @@ class VideoService:
 _service = VideoService()
 
 
-def generate_video(script: dict, audio_paths: dict, output_name: str = None) -> str:
-    return _service.generate_video(script, audio_paths, output_name)
+def generate_video(script: dict, audio_paths: dict, template_id: str = "academic", orientation: str = "horizontal", output_name: str = None) -> str:
+    return _service.generate_video(script, audio_paths, template_id, orientation, output_name)

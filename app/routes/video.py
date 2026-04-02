@@ -58,7 +58,7 @@ def generate_script(data: VideoRequest):
         }
 
     audios = generar_audios_desde_guion(guion)
-    video = generate_video(guion, audios)
+    video = generate_video(guion, audios, template_id=data.template.value, orientation=data.orientation.value)
 
     # Build history entry
     video_id = str(uuid.uuid4())
