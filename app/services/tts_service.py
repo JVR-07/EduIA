@@ -32,17 +32,27 @@ def generar_audio(texto: str, nombre_archivo: str) -> str:
 def generar_audios_desde_guion(guion: dict) -> dict:
     rutas = {}
 
-    for seccion, contenido in guion.items():
-        # Si el contenido es dict (nuevo formato), extraer el texto
-        if isinstance(contenido, dict):
-            texto = contenido.get("text", "")
-        else:
-            texto = contenido  # compatibilidad con formato anterior
+    if "scenes" in guion:
+        for idx, scene in enumerate(guion["scenes"]):
+            texto = scene.get("spoken_text", "")
+            if texto:
+                scene_id = scene.get("id", f"scene_{idx}")
+                ruta = generar_audio(texto, scene_id)
+                rutas[scene_id] = ruta
+    else:
+        for seccion, contenido in guion.items():
+            if seccion == "title":
+                continue
+            
+            if isinstance(contenido, dict):
+                texto = contenido.get("text", "")
+            else:
+                texto = contenido  # compatibilidad con formato anterior
 
-        if texto:
-            ruta = generar_audio(texto, seccion)
-            rutas[seccion] = ruta
-        else:
-            rutas[seccion] = None
+            if texto:
+                ruta = generar_audio(texto, seccion)
+                rutas[seccion] = ruta
+            else:
+                rutas[seccion] = None
 
     return rutas

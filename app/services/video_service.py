@@ -94,21 +94,60 @@ class VideoService:
                 "Asegúrate de correr: npm run server (en el directorio remotion/)"
             )
 
+    def _get_audio_duration(self, path: str) -> float:
+        """Obtiene la duración de un audio en segundos usando ffprobe."""
+        import subprocess
+        try:
+            cmd = [
+                "ffprobe", "-v", "error", "-show_entries", "format=duration",
+                "-of", "default=noprint_wrappers=1:nokey=1", path
+            ]
+            result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+            return float(result.stdout.strip())
+        except Exception as e:
+            logger.error(f"Error midiendo duración de audio {path}: {e}")
+            return 0.0
+
     def _build_payload(self, script: dict, audio_paths: dict, template_id: str, orientation: str, output_name: str) -> dict:
          # Convertir rutas locales a URLs HTTP
         http_audio_paths = {}
         for key, path in audio_paths.items():
             if path:
-                filename = Path(path).name  # ej: "introduccion.mp3"
+                filename = Path(path).name  # ej: "scene_1.mp3"
                 http_audio_paths[key] = f"{BACKEND_URL}/audio/{filename}"
             else:
                 http_audio_paths[key] = ""
             
-        """
-        Convierte el JSON de Gemini al formato que espera Remotion.
+        if "scenes" in script:
+            scenes = script["scenes"]
+            for idx, scene in enumerate(scenes):
+                scene_id = scene.get("id", f"scene_{idx}")
+                audio_local_path = audio_paths.get(scene_id)
+                
+                # Intentar obtener duración real del audio
+                audio_dur = 0.0
+                if audio_local_path and os.path.exists(audio_local_path):
+                    audio_dur = self._get_audio_duration(audio_local_path)
+                
+                if audio_dur > 0:
+                    # Usar duración real + buffer de 0.5s para que no se corte
+                    scene["duration"] = audio_dur + 0.5
+                elif "duration" not in scene:
+                    texto = scene.get("spoken_text", scene.get("text", ""))
+                    words = len(texto.split())
+                    scene["duration"] = max(8, int(words * 0.46))
+            
+            return {
+                "title": script.get("title", script.get("tema", "Sin título")),
+                "scenes": scenes,
+                "audioPaths": http_audio_paths,
+                "templateId": template_id,
+                "orientation": orientation,
+                "outputName": output_name,
+            }
 
-        El guión de Gemini puede venir con duraciones en segundos.
-        Si no vienen, se estiman por longitud del texto.
+        """
+        Fallback a legacy Format. Convertir el JSON de Gemini al formato que espera Remotion.
         """
         sections = {}
         for key in ["introduccion", "explicacion", "ejemplo", "conclusion"]:
