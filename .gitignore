@@ -45,6 +45,7 @@ ENV/
 outputs/*.mp4
 outputs/videos/
 output/
+outputs/audio/
 
 # Logs
 npm-debug.log*
